@@ -73,6 +73,12 @@ void uniffi_glalby_bindings_fn_free_blockinggreenlightalbyclient(
 	RustCallStatus* out_status
 );
 
+RustBuffer uniffi_glalby_bindings_fn_method_blockinggreenlightalbyclient_close(
+	void* ptr,
+	RustBuffer request,
+	RustCallStatus* out_status
+);
+
 RustBuffer uniffi_glalby_bindings_fn_method_blockinggreenlightalbyclient_connect_peer(
 	void* ptr,
 	RustBuffer request,
@@ -469,6 +475,10 @@ uint16_t uniffi_glalby_bindings_checksum_func_recover(
 );
 
 uint16_t uniffi_glalby_bindings_checksum_func_register(
+	RustCallStatus* out_status
+);
+
+uint16_t uniffi_glalby_bindings_checksum_method_blockinggreenlightalbyclient_close(
 	RustCallStatus* out_status
 );
 
