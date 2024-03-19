@@ -132,6 +132,18 @@ RustBuffer uniffi_glalby_bindings_fn_method_blockinggreenlightalbyclient_pay(
 	RustCallStatus* out_status
 );
 
+RustBuffer uniffi_glalby_bindings_fn_method_blockinggreenlightalbyclient_sign_message(
+	void* ptr,
+	RustBuffer request,
+	RustCallStatus* out_status
+);
+
+RustBuffer uniffi_glalby_bindings_fn_method_blockinggreenlightalbyclient_withdraw(
+	void* ptr,
+	RustBuffer request,
+	RustCallStatus* out_status
+);
+
 void* uniffi_glalby_bindings_fn_func_new_blocking_greenlight_alby_client(
 	RustBuffer mnemonic,
 	RustBuffer credentials,
@@ -497,6 +509,14 @@ uint16_t uniffi_glalby_bindings_checksum_method_blockinggreenlightalbyclient_new
 );
 
 uint16_t uniffi_glalby_bindings_checksum_method_blockinggreenlightalbyclient_pay(
+	RustCallStatus* out_status
+);
+
+uint16_t uniffi_glalby_bindings_checksum_method_blockinggreenlightalbyclient_sign_message(
+	RustCallStatus* out_status
+);
+
+uint16_t uniffi_glalby_bindings_checksum_method_blockinggreenlightalbyclient_withdraw(
 	RustCallStatus* out_status
 );
 
