@@ -461,6 +461,15 @@ func uniffiCheckChecksums() {
 			panic("glalby: uniffi_glalby_bindings_checksum_method_blockinggreenlightalbyclient_pay: UniFFI API checksum mismatch")
 		}
 	}
+	{
+		checksum := rustCall(func(uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_glalby_bindings_checksum_method_blockinggreenlightalbyclient_withdraw(uniffiStatus)
+		})
+		if checksum != 58687 {
+			// If this happens try cleaning and rebuilding your project
+			panic("glalby: uniffi_glalby_bindings_checksum_method_blockinggreenlightalbyclient_withdraw: UniFFI API checksum mismatch")
+		}
+	}
 }
 
 type FfiConverterUint16 struct{}
@@ -846,6 +855,21 @@ func (_self *BlockingGreenlightAlbyClient) Pay(request PayRequest) (PayResponse,
 		return _uniffiDefaultValue, _uniffiErr
 	} else {
 		return FfiConverterTypePayResponseINSTANCE.Lift(_uniffiRV), _uniffiErr
+	}
+}
+
+func (_self *BlockingGreenlightAlbyClient) Withdraw(request WithdrawRequest) (WithdrawResponse, error) {
+	_pointer := _self.ffiObject.incrementPointer("*BlockingGreenlightAlbyClient")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError(FfiConverterTypeSdkError{}, func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return C.uniffi_glalby_bindings_fn_method_blockinggreenlightalbyclient_withdraw(
+			_pointer, FfiConverterTypeWithdrawRequestINSTANCE.Lower(request), _uniffiStatus)
+	})
+	if _uniffiErr != nil {
+		var _uniffiDefaultValue WithdrawResponse
+		return _uniffiDefaultValue, _uniffiErr
+	} else {
+		return FfiConverterTypeWithdrawResponseINSTANCE.Lift(_uniffiRV), _uniffiErr
 	}
 }
 
@@ -2177,6 +2201,155 @@ func (_ FfiDestroyerTypeTlvEntry) Destroy(value TlvEntry) {
 	value.Destroy()
 }
 
+type WithdrawRequest struct {
+	Destination string
+	Amount      *AmountOrAll
+	Minconf     *uint32
+}
+
+func (r *WithdrawRequest) Destroy() {
+	FfiDestroyerString{}.Destroy(r.Destination)
+	FfiDestroyerOptionalTypeAmountOrAll{}.Destroy(r.Amount)
+	FfiDestroyerOptionalUint32{}.Destroy(r.Minconf)
+}
+
+type FfiConverterTypeWithdrawRequest struct{}
+
+var FfiConverterTypeWithdrawRequestINSTANCE = FfiConverterTypeWithdrawRequest{}
+
+func (c FfiConverterTypeWithdrawRequest) Lift(rb RustBufferI) WithdrawRequest {
+	return LiftFromRustBuffer[WithdrawRequest](c, rb)
+}
+
+func (c FfiConverterTypeWithdrawRequest) Read(reader io.Reader) WithdrawRequest {
+	return WithdrawRequest{
+		FfiConverterStringINSTANCE.Read(reader),
+		FfiConverterOptionalTypeAmountOrAllINSTANCE.Read(reader),
+		FfiConverterOptionalUint32INSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterTypeWithdrawRequest) Lower(value WithdrawRequest) RustBuffer {
+	return LowerIntoRustBuffer[WithdrawRequest](c, value)
+}
+
+func (c FfiConverterTypeWithdrawRequest) Write(writer io.Writer, value WithdrawRequest) {
+	FfiConverterStringINSTANCE.Write(writer, value.Destination)
+	FfiConverterOptionalTypeAmountOrAllINSTANCE.Write(writer, value.Amount)
+	FfiConverterOptionalUint32INSTANCE.Write(writer, value.Minconf)
+}
+
+type FfiDestroyerTypeWithdrawRequest struct{}
+
+func (_ FfiDestroyerTypeWithdrawRequest) Destroy(value WithdrawRequest) {
+	value.Destroy()
+}
+
+type WithdrawResponse struct {
+	Tx   string
+	Txid string
+	Psbt string
+}
+
+func (r *WithdrawResponse) Destroy() {
+	FfiDestroyerString{}.Destroy(r.Tx)
+	FfiDestroyerString{}.Destroy(r.Txid)
+	FfiDestroyerString{}.Destroy(r.Psbt)
+}
+
+type FfiConverterTypeWithdrawResponse struct{}
+
+var FfiConverterTypeWithdrawResponseINSTANCE = FfiConverterTypeWithdrawResponse{}
+
+func (c FfiConverterTypeWithdrawResponse) Lift(rb RustBufferI) WithdrawResponse {
+	return LiftFromRustBuffer[WithdrawResponse](c, rb)
+}
+
+func (c FfiConverterTypeWithdrawResponse) Read(reader io.Reader) WithdrawResponse {
+	return WithdrawResponse{
+		FfiConverterStringINSTANCE.Read(reader),
+		FfiConverterStringINSTANCE.Read(reader),
+		FfiConverterStringINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterTypeWithdrawResponse) Lower(value WithdrawResponse) RustBuffer {
+	return LowerIntoRustBuffer[WithdrawResponse](c, value)
+}
+
+func (c FfiConverterTypeWithdrawResponse) Write(writer io.Writer, value WithdrawResponse) {
+	FfiConverterStringINSTANCE.Write(writer, value.Tx)
+	FfiConverterStringINSTANCE.Write(writer, value.Txid)
+	FfiConverterStringINSTANCE.Write(writer, value.Psbt)
+}
+
+type FfiDestroyerTypeWithdrawResponse struct{}
+
+func (_ FfiDestroyerTypeWithdrawResponse) Destroy(value WithdrawResponse) {
+	value.Destroy()
+}
+
+type AmountOrAll interface {
+	Destroy()
+}
+type AmountOrAllAmount struct {
+	Msat uint64
+}
+
+func (e AmountOrAllAmount) Destroy() {
+	FfiDestroyerUint64{}.Destroy(e.Msat)
+}
+
+type AmountOrAllAll struct {
+}
+
+func (e AmountOrAllAll) Destroy() {
+}
+
+type FfiConverterTypeAmountOrAll struct{}
+
+var FfiConverterTypeAmountOrAllINSTANCE = FfiConverterTypeAmountOrAll{}
+
+func (c FfiConverterTypeAmountOrAll) Lift(rb RustBufferI) AmountOrAll {
+	return LiftFromRustBuffer[AmountOrAll](c, rb)
+}
+
+func (c FfiConverterTypeAmountOrAll) Lower(value AmountOrAll) RustBuffer {
+	return LowerIntoRustBuffer[AmountOrAll](c, value)
+}
+func (FfiConverterTypeAmountOrAll) Read(reader io.Reader) AmountOrAll {
+	id := readInt32(reader)
+	switch id {
+	case 1:
+		return AmountOrAllAmount{
+			FfiConverterUint64INSTANCE.Read(reader),
+		}
+	case 2:
+		return AmountOrAllAll{}
+	default:
+		panic(fmt.Sprintf("invalid enum value %v in FfiConverterTypeAmountOrAll.Read()", id))
+	}
+}
+
+func (FfiConverterTypeAmountOrAll) Write(writer io.Writer, value AmountOrAll) {
+	switch variant_value := value.(type) {
+	case AmountOrAllAmount:
+		writeInt32(writer, 1)
+		FfiConverterUint64INSTANCE.Write(writer, variant_value.Msat)
+	case AmountOrAllAll:
+		writeInt32(writer, 2)
+	default:
+		_ = variant_value
+		panic(fmt.Sprintf("invalid enum value `%v` in FfiConverterTypeAmountOrAll.Write", value))
+	}
+}
+
+type FfiDestroyerTypeAmountOrAll struct{}
+
+func (_ FfiDestroyerTypeAmountOrAll) Destroy(value AmountOrAll) {
+	value.Destroy()
+}
+
 type ListInvoicesIndex uint
 
 const (
@@ -2586,6 +2759,43 @@ type FfiDestroyerOptionalTypeListInvoicesInvoicePaidOutpoint struct{}
 func (_ FfiDestroyerOptionalTypeListInvoicesInvoicePaidOutpoint) Destroy(value *ListInvoicesInvoicePaidOutpoint) {
 	if value != nil {
 		FfiDestroyerTypeListInvoicesInvoicePaidOutpoint{}.Destroy(*value)
+	}
+}
+
+type FfiConverterOptionalTypeAmountOrAll struct{}
+
+var FfiConverterOptionalTypeAmountOrAllINSTANCE = FfiConverterOptionalTypeAmountOrAll{}
+
+func (c FfiConverterOptionalTypeAmountOrAll) Lift(rb RustBufferI) *AmountOrAll {
+	return LiftFromRustBuffer[*AmountOrAll](c, rb)
+}
+
+func (_ FfiConverterOptionalTypeAmountOrAll) Read(reader io.Reader) *AmountOrAll {
+	if readInt8(reader) == 0 {
+		return nil
+	}
+	temp := FfiConverterTypeAmountOrAllINSTANCE.Read(reader)
+	return &temp
+}
+
+func (c FfiConverterOptionalTypeAmountOrAll) Lower(value *AmountOrAll) RustBuffer {
+	return LowerIntoRustBuffer[*AmountOrAll](c, value)
+}
+
+func (_ FfiConverterOptionalTypeAmountOrAll) Write(writer io.Writer, value *AmountOrAll) {
+	if value == nil {
+		writeInt8(writer, 0)
+	} else {
+		writeInt8(writer, 1)
+		FfiConverterTypeAmountOrAllINSTANCE.Write(writer, *value)
+	}
+}
+
+type FfiDestroyerOptionalTypeAmountOrAll struct{}
+
+func (_ FfiDestroyerOptionalTypeAmountOrAll) Destroy(value *AmountOrAll) {
+	if value != nil {
+		FfiDestroyerTypeAmountOrAll{}.Destroy(*value)
 	}
 }
 
