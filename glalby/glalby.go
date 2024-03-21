@@ -373,6 +373,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 		checksum := rustCall(func(uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_glalby_bindings_checksum_method_blockinggreenlightalbyclient_close(uniffiStatus)
+		})
+		if checksum != 20878 {
+			// If this happens try cleaning and rebuilding your project
+			panic("glalby: uniffi_glalby_bindings_checksum_method_blockinggreenlightalbyclient_close: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_glalby_bindings_checksum_method_blockinggreenlightalbyclient_connect_peer(uniffiStatus)
 		})
 		if checksum != 50417 {
@@ -741,6 +750,21 @@ type BlockingGreenlightAlbyClient struct {
 	ffiObject FfiObject
 }
 
+func (_self *BlockingGreenlightAlbyClient) Close(request CloseRequest) (CloseResponse, error) {
+	_pointer := _self.ffiObject.incrementPointer("*BlockingGreenlightAlbyClient")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError(FfiConverterTypeSdkError{}, func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return C.uniffi_glalby_bindings_fn_method_blockinggreenlightalbyclient_close(
+			_pointer, FfiConverterTypeCloseRequestINSTANCE.Lower(request), _uniffiStatus)
+	})
+	if _uniffiErr != nil {
+		var _uniffiDefaultValue CloseResponse
+		return _uniffiDefaultValue, _uniffiErr
+	} else {
+		return FfiConverterTypeCloseResponseINSTANCE.Lift(_uniffiRV), _uniffiErr
+	}
+}
+
 func (_self *BlockingGreenlightAlbyClient) ConnectPeer(request ConnectPeerRequest) (ConnectPeerResponse, error) {
 	_pointer := _self.ffiObject.incrementPointer("*BlockingGreenlightAlbyClient")
 	defer _self.ffiObject.decrementPointer()
@@ -962,6 +986,102 @@ func (c FfiConverterBlockingGreenlightAlbyClient) Write(writer io.Writer, value 
 type FfiDestroyerBlockingGreenlightAlbyClient struct{}
 
 func (_ FfiDestroyerBlockingGreenlightAlbyClient) Destroy(value *BlockingGreenlightAlbyClient) {
+	value.Destroy()
+}
+
+type CloseRequest struct {
+	Id                 string
+	UnilateralTimeout  *uint32
+	Destination        *string
+	FeeNegotiationStep *string
+	ForceLeaseClosed   *bool
+}
+
+func (r *CloseRequest) Destroy() {
+	FfiDestroyerString{}.Destroy(r.Id)
+	FfiDestroyerOptionalUint32{}.Destroy(r.UnilateralTimeout)
+	FfiDestroyerOptionalString{}.Destroy(r.Destination)
+	FfiDestroyerOptionalString{}.Destroy(r.FeeNegotiationStep)
+	FfiDestroyerOptionalBool{}.Destroy(r.ForceLeaseClosed)
+}
+
+type FfiConverterTypeCloseRequest struct{}
+
+var FfiConverterTypeCloseRequestINSTANCE = FfiConverterTypeCloseRequest{}
+
+func (c FfiConverterTypeCloseRequest) Lift(rb RustBufferI) CloseRequest {
+	return LiftFromRustBuffer[CloseRequest](c, rb)
+}
+
+func (c FfiConverterTypeCloseRequest) Read(reader io.Reader) CloseRequest {
+	return CloseRequest{
+		FfiConverterStringINSTANCE.Read(reader),
+		FfiConverterOptionalUint32INSTANCE.Read(reader),
+		FfiConverterOptionalStringINSTANCE.Read(reader),
+		FfiConverterOptionalStringINSTANCE.Read(reader),
+		FfiConverterOptionalBoolINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterTypeCloseRequest) Lower(value CloseRequest) RustBuffer {
+	return LowerIntoRustBuffer[CloseRequest](c, value)
+}
+
+func (c FfiConverterTypeCloseRequest) Write(writer io.Writer, value CloseRequest) {
+	FfiConverterStringINSTANCE.Write(writer, value.Id)
+	FfiConverterOptionalUint32INSTANCE.Write(writer, value.UnilateralTimeout)
+	FfiConverterOptionalStringINSTANCE.Write(writer, value.Destination)
+	FfiConverterOptionalStringINSTANCE.Write(writer, value.FeeNegotiationStep)
+	FfiConverterOptionalBoolINSTANCE.Write(writer, value.ForceLeaseClosed)
+}
+
+type FfiDestroyerTypeCloseRequest struct{}
+
+func (_ FfiDestroyerTypeCloseRequest) Destroy(value CloseRequest) {
+	value.Destroy()
+}
+
+type CloseResponse struct {
+	ItemType int32
+	Tx       *string
+	Txid     *string
+}
+
+func (r *CloseResponse) Destroy() {
+	FfiDestroyerInt32{}.Destroy(r.ItemType)
+	FfiDestroyerOptionalString{}.Destroy(r.Tx)
+	FfiDestroyerOptionalString{}.Destroy(r.Txid)
+}
+
+type FfiConverterTypeCloseResponse struct{}
+
+var FfiConverterTypeCloseResponseINSTANCE = FfiConverterTypeCloseResponse{}
+
+func (c FfiConverterTypeCloseResponse) Lift(rb RustBufferI) CloseResponse {
+	return LiftFromRustBuffer[CloseResponse](c, rb)
+}
+
+func (c FfiConverterTypeCloseResponse) Read(reader io.Reader) CloseResponse {
+	return CloseResponse{
+		FfiConverterInt32INSTANCE.Read(reader),
+		FfiConverterOptionalStringINSTANCE.Read(reader),
+		FfiConverterOptionalStringINSTANCE.Read(reader),
+	}
+}
+
+func (c FfiConverterTypeCloseResponse) Lower(value CloseResponse) RustBuffer {
+	return LowerIntoRustBuffer[CloseResponse](c, value)
+}
+
+func (c FfiConverterTypeCloseResponse) Write(writer io.Writer, value CloseResponse) {
+	FfiConverterInt32INSTANCE.Write(writer, value.ItemType)
+	FfiConverterOptionalStringINSTANCE.Write(writer, value.Tx)
+	FfiConverterOptionalStringINSTANCE.Write(writer, value.Txid)
+}
+
+type FfiDestroyerTypeCloseResponse struct{}
+
+func (_ FfiDestroyerTypeCloseResponse) Destroy(value CloseResponse) {
 	value.Destroy()
 }
 
