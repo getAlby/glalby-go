@@ -472,6 +472,15 @@ func uniffiCheckChecksums() {
 	}
 	{
 		checksum := rustCall(func(uniffiStatus *C.RustCallStatus) C.uint16_t {
+			return C.uniffi_glalby_bindings_checksum_method_blockinggreenlightalbyclient_shutdown(uniffiStatus)
+		})
+		if checksum != 16363 {
+			// If this happens try cleaning and rebuilding your project
+			panic("glalby: uniffi_glalby_bindings_checksum_method_blockinggreenlightalbyclient_shutdown: UniFFI API checksum mismatch")
+		}
+	}
+	{
+		checksum := rustCall(func(uniffiStatus *C.RustCallStatus) C.uint16_t {
 			return C.uniffi_glalby_bindings_checksum_method_blockinggreenlightalbyclient_sign_message(uniffiStatus)
 		})
 		if checksum != 41469 {
@@ -915,6 +924,21 @@ func (_self *BlockingGreenlightAlbyClient) Pay(request PayRequest) (PayResponse,
 	}
 }
 
+func (_self *BlockingGreenlightAlbyClient) Shutdown() (ShutdownResponse, error) {
+	_pointer := _self.ffiObject.incrementPointer("*BlockingGreenlightAlbyClient")
+	defer _self.ffiObject.decrementPointer()
+	_uniffiRV, _uniffiErr := rustCallWithError(FfiConverterTypeSdkError{}, func(_uniffiStatus *C.RustCallStatus) RustBufferI {
+		return C.uniffi_glalby_bindings_fn_method_blockinggreenlightalbyclient_shutdown(
+			_pointer, _uniffiStatus)
+	})
+	if _uniffiErr != nil {
+		var _uniffiDefaultValue ShutdownResponse
+		return _uniffiDefaultValue, _uniffiErr
+	} else {
+		return FfiConverterTypeShutdownResponseINSTANCE.Lift(_uniffiRV), _uniffiErr
+	}
+}
+
 func (_self *BlockingGreenlightAlbyClient) SignMessage(request SignMessageRequest) (SignMessageResponse, error) {
 	_pointer := _self.ffiObject.incrementPointer("*BlockingGreenlightAlbyClient")
 	defer _self.ffiObject.decrementPointer()
@@ -1302,13 +1326,11 @@ func (_ FfiDestroyerTypeGetInfoResponse) Destroy(value GetInfoResponse) {
 }
 
 type GreenlightCredentials struct {
-	DeviceKey  string
-	DeviceCert string
+	GlCreds string
 }
 
 func (r *GreenlightCredentials) Destroy() {
-	FfiDestroyerString{}.Destroy(r.DeviceKey)
-	FfiDestroyerString{}.Destroy(r.DeviceCert)
+	FfiDestroyerString{}.Destroy(r.GlCreds)
 }
 
 type FfiConverterTypeGreenlightCredentials struct{}
@@ -1322,7 +1344,6 @@ func (c FfiConverterTypeGreenlightCredentials) Lift(rb RustBufferI) GreenlightCr
 func (c FfiConverterTypeGreenlightCredentials) Read(reader io.Reader) GreenlightCredentials {
 	return GreenlightCredentials{
 		FfiConverterStringINSTANCE.Read(reader),
-		FfiConverterStringINSTANCE.Read(reader),
 	}
 }
 
@@ -1331,8 +1352,7 @@ func (c FfiConverterTypeGreenlightCredentials) Lower(value GreenlightCredentials
 }
 
 func (c FfiConverterTypeGreenlightCredentials) Write(writer io.Writer, value GreenlightCredentials) {
-	FfiConverterStringINSTANCE.Write(writer, value.DeviceKey)
-	FfiConverterStringINSTANCE.Write(writer, value.DeviceCert)
+	FfiConverterStringINSTANCE.Write(writer, value.GlCreds)
 }
 
 type FfiDestroyerTypeGreenlightCredentials struct{}
@@ -2214,15 +2234,13 @@ func (_ FfiDestroyerTypeNewAddressRequest) Destroy(value NewAddressRequest) {
 }
 
 type NewAddressResponse struct {
-	P2tr       *string
-	Bech32     *string
-	P2shSegwit *string
+	P2tr   *string
+	Bech32 *string
 }
 
 func (r *NewAddressResponse) Destroy() {
 	FfiDestroyerOptionalString{}.Destroy(r.P2tr)
 	FfiDestroyerOptionalString{}.Destroy(r.Bech32)
-	FfiDestroyerOptionalString{}.Destroy(r.P2shSegwit)
 }
 
 type FfiConverterTypeNewAddressResponse struct{}
@@ -2237,7 +2255,6 @@ func (c FfiConverterTypeNewAddressResponse) Read(reader io.Reader) NewAddressRes
 	return NewAddressResponse{
 		FfiConverterOptionalStringINSTANCE.Read(reader),
 		FfiConverterOptionalStringINSTANCE.Read(reader),
-		FfiConverterOptionalStringINSTANCE.Read(reader),
 	}
 }
 
@@ -2248,7 +2265,6 @@ func (c FfiConverterTypeNewAddressResponse) Lower(value NewAddressResponse) Rust
 func (c FfiConverterTypeNewAddressResponse) Write(writer io.Writer, value NewAddressResponse) {
 	FfiConverterOptionalStringINSTANCE.Write(writer, value.P2tr)
 	FfiConverterOptionalStringINSTANCE.Write(writer, value.Bech32)
-	FfiConverterOptionalStringINSTANCE.Write(writer, value.P2shSegwit)
 }
 
 type FfiDestroyerTypeNewAddressResponse struct{}
@@ -2326,6 +2342,37 @@ func (c FfiConverterTypePayResponse) Write(writer io.Writer, value PayResponse) 
 type FfiDestroyerTypePayResponse struct{}
 
 func (_ FfiDestroyerTypePayResponse) Destroy(value PayResponse) {
+	value.Destroy()
+}
+
+type ShutdownResponse struct {
+}
+
+func (r *ShutdownResponse) Destroy() {
+}
+
+type FfiConverterTypeShutdownResponse struct{}
+
+var FfiConverterTypeShutdownResponseINSTANCE = FfiConverterTypeShutdownResponse{}
+
+func (c FfiConverterTypeShutdownResponse) Lift(rb RustBufferI) ShutdownResponse {
+	return LiftFromRustBuffer[ShutdownResponse](c, rb)
+}
+
+func (c FfiConverterTypeShutdownResponse) Read(reader io.Reader) ShutdownResponse {
+	return ShutdownResponse{}
+}
+
+func (c FfiConverterTypeShutdownResponse) Lower(value ShutdownResponse) RustBuffer {
+	return LowerIntoRustBuffer[ShutdownResponse](c, value)
+}
+
+func (c FfiConverterTypeShutdownResponse) Write(writer io.Writer, value ShutdownResponse) {
+}
+
+type FfiDestroyerTypeShutdownResponse struct{}
+
+func (_ FfiDestroyerTypeShutdownResponse) Destroy(value ShutdownResponse) {
 	value.Destroy()
 }
 
